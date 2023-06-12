@@ -7,4 +7,13 @@
 ### 解决过程:  
 1: 查看文档, 发现greenplum主节点配置文件只是配置了数据节点的ip, 没有配置ssh端口的方式
 2: 查询资料, 发现greenplum版本的一些问题, 代码中未提供指定ssh端口的方式, 只能修改代码, 尝试编辑gpssh-exkeys脚本和相关python`/lib/python/gppylib/commands/base.py`文件, 手动再执行ssh命令的地方加上
-数据节点的端口号`-p 2222`; 尝试启动数据库成功, 但是个别数据节点segment未正常加载, 尝试执行gprecoversegment进
+数据节点的端口号`-p 2222`; 尝试启动数据库成功, 但是个别数据节点segment未正常加载, 尝试执行gprecoversegment进行修复, 发现仍然存在连接ssh 22端口的情况,
+3: 尝试添加alias ssh='ssh -p2222', 发现无效, 尝试编辑~/.ssh/config, 配置几个数据节点的ssh配置, 测试可行
+
+```
+Host sdw1
+  HostName xxx.xxx.xxx.xxx
+  Port 2222
+  User gpadmin
+  IdentityFile ~/.ssh/id_rsa
+```
